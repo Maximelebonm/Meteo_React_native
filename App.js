@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ImageBackground } from "react-native";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { s } from "./App.style";
+import { Home } from "./screens/home/Home";
+import backgroundImg from "./assets/background.png";
+import AlataRegular from "./assets/fonts/Alata-Regular.ttf";
+import { useFonts } from "expo-font";
 
 export default function App() {
+  const [fontIsLoad] = useFonts({
+    "Alata-Regular": AlataRegular,
+  });
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ImageBackground
+      source={backgroundImg}
+      style={s.imageBackground}
+      imageStyle={s.backgroundOpacity}
+    >
+      <SafeAreaProvider>
+        <SafeAreaView style={s.container}>
+          {fontIsLoad ? <Home /> : null}
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
