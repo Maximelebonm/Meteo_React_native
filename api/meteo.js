@@ -1,18 +1,34 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const meteoApi = async (coords) => {
-    return (await axios.get(
-        `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&daily=weathercode,temperature_2m_max,sunrise,sunset,windspeed_10m_max&timezone=auto&current_weather=true`
-    )).data;
-}
+  return (
+    await axios.get(
+      `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&daily=weathercode,temperature_2m_max,sunrise,sunset,windspeed_10m_max&timezone=auto&current_weather=true`
+    )
+  ).data;
+};
 
 export const cityApi = async (coords) => {
-    const {
-        address: { city, village },
-      } = (
-        await axios.get(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
-        )
-      ).data;
-      return city || village;
-}
+  const {
+    address: { city, village },
+  } = (
+    await axios.get(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
+    )
+  ).data;
+  return city || village;
+};
+
+export const coordFormcityApi = async (city) => {
+  try {
+    const { latitude: lat, longitude: lng } = (
+      await axios.get(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${city}&language=fr&count=1`
+      )
+    ).data.results[0];
+
+    return { lat, lng };
+  } catch (e) {
+    throw "pas de coordonnée trouvées pour la recherche : " + city;
+  }
+};

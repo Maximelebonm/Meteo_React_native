@@ -1,14 +1,15 @@
-import { Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import {s} from './Home.style';
 import { useEffect, useState } from 'react';
 import {requestForegroundPermissionsAsync, getCurrentPositionAsync} from "expo-location"
-import { meteoApi, cityApi } from '../../api/meteo';
+import { meteoApi, cityApi, coordFormcityApi } from '../../api/meteo';
 import { Txt } from '../../components/Txt/Txt';
 import { MeteoBasic } from '../../components/meteoBasic/MeteoBasic';
 import { getWeater } from '../../service/meteo.service';
 import { MeteoAdvanced } from '../../components/meteoAvdanced/MeteoAdvanced';
 import {useNavigation} from '@react-navigation/native'
 import { Container } from '../../components/container/container';
+import { SearchBar } from '../../components/SearchBar/SearchBar';
 
 export const Home = () => {
     const [coords, setCoords] = useState();
@@ -42,12 +43,21 @@ export const Home = () => {
      const weatherResponse = await meteoApi(coordinate);
      setWeather(weatherResponse) 
     }
-    console.log(weather)
 
     const fetchCity = async (coordinate) => {
        const cityResponse =  await cityApi(coordinate);
        setCity(cityResponse); 
     }
+
+    const fetchCoordByCity = async (city) => {
+   try{
+        const coordResponse =  await coordFormcityApi(city);
+        setCoords(coordResponse); 
+    }
+    catch (e){
+        Alert.alert("Oups ! ", e);
+    }
+}
 
     function goToForcastPage (){
         nav.navigate("Forecast", {city, ...weather.daily});
@@ -64,8 +74,8 @@ export const Home = () => {
         />
 
         </View>
-        <View style={s.navBar}>
-        <Text>Hello middle</Text>
+        <View style={s.searchBar}>
+        <SearchBar onSubmit={fetchCoordByCity}/>
 
         </View>
         <View style={s.advancedMeteo}>

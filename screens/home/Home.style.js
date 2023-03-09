@@ -4,7 +4,7 @@ export const s = StyleSheet.create({
   meteo_basic: {
     flex: 2,
   },
-  navBar: {
+  searchBar: {
     flex: 2,
   },
   advancedMeteo: {
